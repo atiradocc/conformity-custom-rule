@@ -41,9 +41,7 @@ payload = {
 	"remediationNotes": "{}".format(args.remediationNotes),
 	"service": "{}".format(args.service),
 	"resourceType": "{}".format(args.resourceType),
-	"categories": [ 
-		"security"
-		],
+	"categories": args.categories,
 	"severity": "{}".format(args.severity),
 	"provider": "{}".format(args.provider),
 	"enabled": True,

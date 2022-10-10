@@ -31,6 +31,7 @@ args = parser.parse_args()
 
 header = {
     "Content-Type": "application/vnd.api+json",
+    "api-version": "v1",
     "Authorization": "ApiKey {}".format(args.apiKey)
 }
 
@@ -40,9 +41,12 @@ payload = {
 	"remediationNotes": "{}".format(args.remediationNotes),
 	"service": "{}".format(args.service),
 	"resourceType": "{}".format(args.resourceType),
-	"categories:": "[{}]".format(args.categories),
+	"categories": [ 
+		"security"
+		],
 	"severity": "{}".format(args.severity),
 	"provider": "{}".format(args.provider),
+	"enabled": True,
 	"attributes": [
 		{
 			"name": "bucketName",
@@ -68,7 +72,7 @@ payload = {
 	]
 }
 
-conformityEndpoint = "https://conformity.{}.cloudone.trendmicro.com".format(
+conformityEndpoint = "https://conformity.{}.cloudone.trendmicro.com/api/custom-rules".format(
     args.region)
 
 response = requests.post(url=conformityEndpoint, json=payload, headers=header)

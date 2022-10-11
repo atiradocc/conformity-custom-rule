@@ -6,7 +6,9 @@ import requests
 import json
 
 parser = argparse.ArgumentParser(
-    description='Creates a custom rule in C1 Conformity. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#using-custom-rules')
+    description='Updates a custom rule in C1 Conformity. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#using-custom-rules')
+parser.add_argument('--ruleId', type=str, required=True,
+                    help='Conformity Custom Rule Id')
 parser.add_argument('--name', type=str, required=True,
                     help='Custom Rule Name')
 parser.add_argument('--description', type=str, required=True,
@@ -72,9 +74,9 @@ payload = {
 	]
 }
 
-conformityEndpoint = "https://conformity.{}.cloudone.trendmicro.com/api/custom-rules".format(
-    args.region)
+conformityEndpoint = "https://conformity.{0}.cloudone.trendmicro.com/api/custom-rules/{1}".format(
+    args.region, args.ruleId)
 
-response = requests.post(url=conformityEndpoint, json=payload, headers=header)
+response = requests.put(url=conformityEndpoint, json=payload, headers=header)
 
 print(response.text)

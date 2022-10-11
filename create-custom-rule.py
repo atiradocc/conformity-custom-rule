@@ -6,27 +6,29 @@ import requests
 import json
 
 parser = argparse.ArgumentParser(
-    description='Creates a simple custom rule that validates an S3 bucket name in C1 Conformity. Note: Enabled by default')
+    description='Creates a custom rule in C1 Conformity. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#using-custom-rules')
 parser.add_argument('--name', type=str, required=True,
                     help='Custom Rule Name')
 parser.add_argument('--description', type=str, required=True,
                     help='Description')
+parser.add_argument('--eventName', type=str, required=True,
+                    help='Real-Time Monitoring Event Name')
 parser.add_argument('--remediationNotes', type=str, required=True,
-                    help='Description')
+                    help='Remediation Notes for addressing the finding')
 parser.add_argument('--service', type=str, required=True,
-                    help='Conformity Cloud Service')
+                    help='Conformity Cloud Service. See https://us-west-2.cloudconformity.com/v1/services')
 parser.add_argument('--resourceType', type=str, required=True,
-                    help='Conformity Resource Type')
+                    help='Conformity Resource Type. See https://us-west-2.cloudconformity.com/v1/resource-types')
 parser.add_argument('--categories', type=str, nargs="+", required=True, choices=[
                     'security', 'cost-optimisation', 'reliability', 'performance-efficiency', 'operational-excellence', 'sustainability'], help='Conformity Well-Architected Pillars')
 parser.add_argument('--severity', type=str, required=True, choices=[
                     'LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH', 'EXTREME'], help='Risk Level')
 parser.add_argument('--provider', type=str, required=True, choices=[
-                    'aws', 'azure', 'gcp'], help='Name of Cloud Provider')
+                    'aws', 'azure', 'gcp'], help='C1 Conformity Providers. See https://us-west-2.cloudconformity.com/v1/providers')
 parser.add_argument('--region', type=str, required=True, choices=[
-                    'us-1', 'trend-us-1', 'au-1', 'ie-1', 'sg-1'], help='Conformity service region')
+                    'us-1', 'trend-us-1', 'au-1', 'ie-1', 'sg-1', 'in-1', 'jp-1', 'ca-1', 'de-1'], help='Cloud One Conformity service region')
 parser.add_argument('--apiKey', type=str, required=True,
-                    help='Conformity API Key')
+                    help='Full Access Cloud One API Key')
 args = parser.parse_args()
 
 header = {
@@ -64,7 +66,7 @@ payload = {
 				]
 			},
 			"event": {
-				"type": "Bucket name is longer than 32 characters"
+				"type": "{}".format(args.eventName)
 			}
 		}
 	]

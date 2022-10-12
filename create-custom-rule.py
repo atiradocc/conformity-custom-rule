@@ -35,10 +35,11 @@ parser.add_argument('--provider', type=str, required=True, choices=[
 parser.add_argument('--attributes', type=dictionary, action='append', required=True,
 	help='Collection of user defined attribute names and the associated resource value that will be used as part of the rule logic/evaluation',
 	metavar='name:Attribute Name,path:data.JSON Path,required:True|False')
-parser.add_argument('--rootCondition', type=str, nargs="1", required=True, choices=[
-                    'any', 'all'], help='Determine whether ANY or ALL rulesets must pass for a successful check ')
+
+parser.add_argument('--ruleLogic', type=str, nargs="1", required=True, choices=[
+                    'any', 'all'], help='Determine whether ANY or ALL rulesets must pass for a successful check. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration')
 parser.add_argument('--ruleSet', type=dictionary, action='append', required=True,
-	help='Main conditions ruleset evaluated using the root condition. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
+	help='Conditions ruleset. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
 	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
 parser.add_argument('--ruleSetAny', type=dictionary, action='append',
 	help='Additional conditions ruletset evaluated using an ANY operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
@@ -46,6 +47,7 @@ parser.add_argument('--ruleSetAny', type=dictionary, action='append',
 parser.add_argument('--ruleSetAll', type=dictionary, action='append',
 	help='Additional conditions ruletset evaluated using an ALL operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
 	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
+
 parser.add_argument('--region', type=str, required=True, choices=[
                     'us-1', 'trend-us-1', 'au-1', 'ie-1', 'sg-1', 'in-1', 'jp-1', 'ca-1', 'de-1'], help='Cloud One Conformity service region')
 parser.add_argument('--apiKey', type=str, required=True,

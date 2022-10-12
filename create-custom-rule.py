@@ -71,7 +71,7 @@ payload = {
 	"rules": [
 		{
 			"conditions": {
-				"{}".format(args.ruleLogic): args.ruleSet
+				"{}".format(args.ruleLogic): args.ruleset
 			},
 			"event": {
 				"type": "{}".format(args.eventName)

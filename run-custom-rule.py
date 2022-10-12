@@ -42,19 +42,19 @@ parser.add_argument('--attributes', type=dictionary, action='append', required=T
 	metavar='name:Attribute Name,path:data.JSON Path,required:True|False')
 parser.add_argument('--ruleLogic', type=str, required=True, choices=[
                     'any', 'all'], help='Determine whether ANY or ALL rulesets must pass for a successful check. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration')
-parser.add_argument('--ruleSet', type=dictionary, action='append', nargs="+", required=True,
+parser.add_argument('--ruleset', type=dictionary, action='append', required=True,
 	help='Conditions ruleset. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
 	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
-parser.add_argument('--rulesetAny', type=dictionary, action='append', nargs="+",
+parser.add_argument('--rulesetAny', type=dictionary, action='append',
 	help='Additional conditions ruletset evaluated using an ANY operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
 	metavar='fact:ATTRIBUTENAME,operator,TESTCRITERIA,value:EXPECTEDVALUE')
-parser.add_argument('--rulesetAll', type=dictionary, action='append', nargs="+",
+parser.add_argument('--rulesetAll', type=dictionary, action='append',
 	help='Additional conditions ruletset evaluated using an ALL operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
 	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
 parser.add_argument('--resourceId', type=str, required=True,
                     help='Provider resource Id')
 parser.add_argument('--accountId', type=str, required=True,
-                    help='Conformity Account Id of the account of the resource')
+                    help='Conformity Account Id where the resource is located')
 parser.add_argument('--region', type=str, required=True, choices=[
                     'us-1', 'trend-us-1', 'au-1', 'ie-1', 'sg-1', 'in-1', 'jp-1', 'ca-1', 'de-1'], help='Cloud One Conformity service region')
 parser.add_argument('--apiKey', type=str, required=True,
@@ -72,18 +72,20 @@ payload = {
 		"description": "{}".format(args.description),
 		"remediationNotes": "{}".format(args.remediationNotes),
 		"service": "{}".format(args.service),
-		"resourceId": "{}".format(args.resourceId),
 		"resourceType": "{}".format(args.resourceType),
+		"resourceId": "{}".format(args.resourceId),
 		"categories": args.categories,
 		"severity": "{}".format(args.severity),
 		"provider": "{}".format(args.provider),
 		"enabled": True,
 		"attributes": args.attributes,
-		"rules": [ 
-			{ "conditions": { "{}".format(args.ruleLogic): args.ruleSet },
-			"event": { "type": "{}".format(args.eventName) } } 
-			] 
-		}
+		"rules": [
+			{
+				"conditions": { "{}".format(args.ruleLogic) : args.ruleset },
+				"event": { "type": "{}".format(args.eventName) }
+			}
+		]
+	}
 }
 
 if args.rulesetAny is not None:
@@ -92,10 +94,9 @@ if args.rulesetAny is not None:
 if args.rulesetAll is not None:
 	payload["rules"][0]["conditions"][args.ruleLogic].append({ "all": args.rulesetAll })
 
-conformityEndpoint = "https://conformity.{0}.cloudone.trendmicro.com/api/custom-rules/run?accountId={1}".format(
+conformityEndpoint = "https://conformity.{0}.cloudone.trendmicro.com/api/custom-rules/run?accountId={1}&resourceData=true".format(
     args.region, args.accountId)
 
 response = requests.post(url=conformityEndpoint, json=payload, headers=header)
 
-print(payload)
 print(response.text)

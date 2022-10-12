@@ -5,9 +5,9 @@ import sys
 import requests
 import json
 
-def attribute(attributeString):
+def dictionary(keyvalues):
 	dictionary = {}
-	for keyValue in attributeString.split(","):
+	for keyValue in keyvalues.split(","):
 		key,value = keyValue.split(":")
 		dictionary[key] = value
 	return dictionary
@@ -32,9 +32,20 @@ parser.add_argument('--severity', type=str, required=True, choices=[
                     'LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH', 'EXTREME'], help='Risk/severity level of the custom rule')
 parser.add_argument('--provider', type=str, required=True, choices=[
                     'aws', 'azure', 'gcp'], help='C1 Conformity Cloud Providers. See https://us-west-2.cloudconformity.com/v1/providers')
-parser.add_argument('--attributes', type=attribute, action='append', required=True,
+parser.add_argument('--attributes', type=dictionary, action='append', required=True,
 	help='Collection of user defined attribute names and the associated resource value that will be used as part of the rule logic/evaluation',
 	metavar='name:Attribute Name,path:data.JSON Path,required:True|False')
+parser.add_argument('--rootCondition', type=str, nargs="1", required=True, choices=[
+                    'any', 'all'], help='Determine whether ANY or ALL rulesets must pass for a successful check ')
+parser.add_argument('--ruleSet', type=dictionary, action='append', required=True,
+	help='Main conditions ruleset evaluated using the root condition. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
+	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
+parser.add_argument('--ruleSetAny', type=dictionary, action='append',
+	help='Additional conditions ruletset evaluated using an ANY operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
+	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
+parser.add_argument('--ruleSetAll', type=dictionary, action='append',
+	help='Additional conditions ruletset evaluated using an ALL operator. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#custom-rule-configuration',
+	metavar='fact:ATTRIBUTENAME,operator:TESTCRITERIA,value:EXPECTEDVALUE')
 parser.add_argument('--region', type=str, required=True, choices=[
                     'us-1', 'trend-us-1', 'au-1', 'ie-1', 'sg-1', 'in-1', 'jp-1', 'ca-1', 'de-1'], help='Cloud One Conformity service region')
 parser.add_argument('--apiKey', type=str, required=True,
@@ -43,7 +54,6 @@ args = parser.parse_args()
 
 header = {
     "Content-Type": "application/vnd.api+json",
-    "api-version": "v1",
     "Authorization": "ApiKey {}".format(args.apiKey)
 }
 
@@ -61,13 +71,7 @@ payload = {
 	"rules": [
 		{
 			"conditions": {
-				"any": [
-					{
-						"fact": "bucketName",
-						"operator": "pattern",
-						"value": "^([a-zA-Z0-9_-]){1,32}$"
-					}
-				]
+				args.rootCondition: args.ruleSet
 			},
 			"event": {
 				"type": "{}".format(args.eventName)

@@ -11,7 +11,7 @@ Additionally, a list-custom-rule.py script allows you to list all rules in an or
 
 # conformity terraform provider
 
-The ideal way to create and update custom rules and all things Conformity is to use the Conformity Terraform provider at:
+For automation scenarios including custom rules and other Conformity configurations, the Conformity Terraform provider provides the ideal developer experience at:
 
 https://registry.terraform.io/providers/trendmicro/conformity/latest/docs
 

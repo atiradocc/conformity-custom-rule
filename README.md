@@ -17,6 +17,6 @@ https://registry.terraform.io/providers/trendmicro/conformity/latest/docs
 
 # developing custom rules
 
-The custom rules framework allows creating rich sets of rulesets for evaluating resource configuration.
+The custom rules framework allows creating rich rulesets for evaluating resource configuration.
 
 The run-custom-rule.py script allows obtaining the information known about a resource to assist developing custom rules.

@@ -12,8 +12,10 @@ def dictionary(keyvalues):
 		dictionary[key] = value
 	return dictionary
 
-parser = argparse.ArgumentParser(
-    description='Creates a custom rule in C1 Conformity. See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#using-custom-rules')
+parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+    description='''\
+Creates a custom rule in C1 Conformity at the organization level.
+See https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#using-custom-rules''')
 parser.add_argument('--name', type=str, required=True,
                     help='Name or title of custom rule')
 parser.add_argument('--description', type=str, required=True,

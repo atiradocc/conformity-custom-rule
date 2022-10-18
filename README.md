@@ -19,11 +19,13 @@ https://registry.terraform.io/providers/trendmicro/conformity/latest/docs
 
 The custom rules framework allows creating rich rulesets for evaluating resource configuration.
 
-The run-custom-rule.py script allows obtaining the information known about a resource to assist developing custom rules.
-
 The custom rules documentation is the ideal resource for understanding rule logic and other settings at:
 
 https://cloudone.trendmicro.com/docs/conformity/in-preview-custom-rules-overview/#operators
+
+All interactions with the tool require using YAML files.
+
+A sample empty rule can be generated using "custom-rule.py generate".
 
 # changes and issues?
 

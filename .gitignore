@@ -44,6 +44,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+.vscode/launch.json
 
 
 # Ignore any files in the workspace folder

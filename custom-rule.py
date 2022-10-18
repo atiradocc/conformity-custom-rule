@@ -165,8 +165,25 @@ def list(args):
 	print("Rules were stored in rule.yaml file.")
 	pass
 
-def dryrun(args):
-	print("dry-run")
+def run(args):
+	header, region = readConfiguration()
+	endpoint = f'{apiEndpoint.format(region)}/run?accountId={args.accountId}&resourceData=true'
+	
+	rule = {}
+	with open(f'{workspaceFolder}/{args.ruleId}.yaml', 'r') as ruleReader:
+		rule = {
+			"configuration": yaml.safe_load(stream=ruleReader)["attributes"]
+		}
+	
+	rule["configuration"]["resourceId"] = args.resourceId
+	response = requests.post(url=endpoint, json=rule, headers=header)
+
+	dryrunFilename = f'{args.ruleId}.run.yaml'
+	with open(f'{workspaceFolder}/{dryrunFilename}', 'w') as configWriter:
+		yaml.dump(data=response.json(), stream=configWriter, indent=4, sort_keys=False)
+
+	print(f'Run trace saved to file {dryrunFilename}. Note that resourceData information can be used for rule development')
+	pass
 
 def showProviders(args):
 	response = requests.get(url="https://us-west-2.cloudconformity.com/v1/providers")
@@ -221,8 +238,14 @@ deleteParser.set_defaults(func=delete)
 listParser = subparsers.add_parser('list', help='list help')
 listParser.set_defaults(func=list)
 
-dryrunParser = subparsers.add_parser('dry-run', help='list help')
-dryrunParser.set_defaults(func=dryrun)
+runParser = subparsers.add_parser('run', help='list help')
+runParser.add_argument('--ruleId', type=str, required=True,
+                    help='Conformity Custom Rule Id')
+runParser.add_argument('--resourceId', type=str, required=True,
+                    help='Provider resource Id')
+runParser.add_argument('--accountId', type=str, required=True,
+                    help='Conformity Account Id where the resource is located')
+runParser.set_defaults(func=run)
 
 showProvidersParser = subparsers.add_parser('show-providers', help='show-providers help')
 showProvidersParser.set_defaults(func=showProviders)

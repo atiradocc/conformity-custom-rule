@@ -6,8 +6,8 @@ Helps manage custom ruleS in C1 Conformity in 4 easy-to-use python scripts:
 
 Usage:
 
-custom-rule help for overall help
-custom-rule command help for help on each action
+custom-rule help for overall help.
+custom-rule command help for help on each action.
 
 # conformity terraform provider
 
